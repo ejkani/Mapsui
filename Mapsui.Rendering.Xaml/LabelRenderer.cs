@@ -47,7 +47,7 @@ namespace Mapsui.Rendering.Xaml
                 Opacity = labelStyle.Opacity,
             };
 
-            DetermineTextWidthAndHeightWpf(out var textWidth, out var textHeight, labelStyle, labelText);
+            DetermineTextWidthAndHeightWpf(out var textWidth, out var textHeight, labelStyle, labelText, border);
 
             var offsetX = labelStyle.Offset.IsRelative ? textWidth * labelStyle.Offset.X : labelStyle.Offset.X;
             var offsetY = labelStyle.Offset.IsRelative ? textHeight * labelStyle.Offset.Y : labelStyle.Offset.Y;
@@ -60,7 +60,7 @@ namespace Mapsui.Rendering.Xaml
             return border;
         }
 
-        private static void DetermineTextWidthAndHeightWpf(out double width, out double height, LabelStyle style, string text)
+        private static void DetermineTextWidthAndHeightWpf(out double width, out double height, LabelStyle style, string text, Visual visual)
         {
             // in WPF the width and height is not calculated at this point. So we use FormattedText
             var formattedText = new FormattedText(
@@ -69,7 +69,8 @@ namespace Mapsui.Rendering.Xaml
                 FlowDirection.LeftToRight,
                 new Typeface(style.Font.FontFamily),
                 style.Font.Size,
-                new SolidColorBrush(style.ForeColor.ToXaml()));
+                new SolidColorBrush(style.ForeColor.ToXaml()),
+                VisualTreeHelper.GetDpi(visual).PixelsPerDip);
 
             width = formattedText.Width;
             height = formattedText.Height;
